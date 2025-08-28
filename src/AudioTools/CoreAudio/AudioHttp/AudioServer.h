@@ -135,11 +135,11 @@ class AudioServerT {
             sent += copier.copy(*converter_ptr);
           }
 
-	  if (max_bytes > 0 && sent >= max_bytes) {
+          if (max_bytes > 0 && sent >= max_bytes) {
             LOGI("range exhausted...");
             client_obj.stop();
             active = false;
-	  }
+          }
 
           // if we limit the size of the WAV the encoder gets automatically
           // closed when all has been sent
@@ -225,9 +225,9 @@ class AudioServerT {
     // and a content-type so the client knows what's coming, then a blank line:
     char *response;
     if (max_bytes > 0) {
-	response = "HTTP/1.1 206 OK";
+        response = "HTTP/1.1 206 OK";
     } else {
-	response = "HTTP/1.1 200 OK";
+        response = "HTTP/1.1 200 OK";
     }
     client_obj.println(response);
     LOGI(response);
@@ -274,21 +274,21 @@ class AudioServerT {
           char c = client_obj.read();  // read a byte, then
           if (c == '\n') {             // if the byte is a newline character
             LOGI("Request: %s", currentLine.c_str());
-	    if (currentLine.startsWith(String("Range: bytes="))) {
-		int minuspos = currentLine.indexOf('-', 13);
+            if (currentLine.startsWith(String("Range: bytes="))) {
+                int minuspos = currentLine.indexOf('-', 13);
 
-		// toInt returns 0 if it's an invalid conversion, so it's "safe"
-		firstbyte = currentLine.substring(13, minuspos).toInt();
-		lastbyte = currentLine.substring(minuspos + 1).toInt();
-	    }
+                // toInt returns 0 if it's an invalid conversion, so it's "safe"
+                firstbyte = currentLine.substring(13, minuspos).toInt();
+                lastbyte = currentLine.substring(minuspos + 1).toInt();
+            }
             // if the current line is blank, you got two newline characters in a
             // row. that's the end of the client HTTP request, so send a
             // response:
             if (currentLine.length() == 0) {
               sendReplyHeader();
               sendReplyContent();
-	      max_bytes = lastbyte - firstbyte;
-	      sent = 0;
+              max_bytes = lastbyte - firstbyte;
+              sent = 0;
               // break out of the while loop:
               break;
             } else {  // if you got a newline, then clear currentLine:
